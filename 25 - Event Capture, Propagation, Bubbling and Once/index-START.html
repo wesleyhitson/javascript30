@@ -37,8 +37,28 @@
   }
 </style>
 
-<button></button>
+<button>Click me</button>
 <script>
+
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+  function logText(e) {
+    console.log(this.classList.value);
+    // e.stopPropogation(); // stops from bubbling up
+  }
+
+  // clicks ripple up to the top of the document (this logs three, two, and one)
+  divs.forEach(div => div.addEventListener('click', logText, {
+    capture: false, // run on the way down instead of the way up
+    once: true // listen for a click then unbind itself (remove event listener)
+  }));
+
+  button.addEventListener('click', () => {
+    console.log('Click!');
+  }, {
+    once: true // only let me click it once, good for store checkouts etc.
+  });
 
 </script>
 </body>
