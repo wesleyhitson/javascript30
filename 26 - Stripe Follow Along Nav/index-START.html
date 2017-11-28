@@ -7,8 +7,8 @@
 <body>
   <h2>Cool</h2>
   <nav class="top">
-    <div class="dropdownBackground">
-      <span class="arrow"></span>
+    <div class="dropdownBackground"> <!-- this is the white that changes tabs -->
+      <span class="arrow"></span> <!-- this is the notch on the white -->
     </div>
 
     <ul class="cool">
@@ -132,6 +132,18 @@
     display: none;
   }
 
+  .dropdownBackground.open {
+    opacity: 1;
+  }
+
+  .trigger-enter .dropdown { /* part of smooth transition */
+    display: block;
+  }
+
+  .trigger-enter-active .dropdown {
+    opacity: 1;
+  }
+
   .trigger-enter .dropdown {
     display: block;
   }
@@ -214,6 +226,43 @@
 </style>
 
 <script>
+  const triggers = document.querySelectorAll('.cool > li'); // all the direct descendents of nav
+  const background = document.querySelector('.dropdownBackground'); // the white div
+  const nav = document.querySelector('.top');
+
+  function handleEnter() {
+    this.classList.add('trigger-enter');
+    // use arrow function so 'this' is inherited
+    setTimeout(() => {
+      if (this.classList.contains('trigger-enter')) {
+        this.classList.add('trigger-enter-active');
+      }
+    }, 150); // timeout time
+    background.classList.add('open');
+
+    const dropdown = this.querySelector('.dropdown'); // do this here so it is dynamic
+    const dropdownCoords = dropdown.getBoundingClientRect();
+    const navCoords = nav.getBoundingClientRect();
+    const coords = {
+      height: dropdownCoords.height,
+      width: dropdownCoords.width,
+      top: dropdownCoords.top - navCoords.top, // nav has been bumped down
+      left: dropdownCoords.left - navCoords.left
+    };
+
+    background.style.setProperty('width', `${coords.width}px`);
+    background.style.setProperty('height', `${coords.height}px`);
+    background.style.setProperty('transform', `translate(${coords.left}px, ${coords.top}px)`);
+  }
+
+  function handleLeave() {
+    this.classList.remove('trigger-enter', 'trigger-enter-active');
+    background.classList.remove('open');
+  }
+
+  triggers.forEach(trigger => trigger.addEventListener('mouseenter', handleEnter));
+  triggers.forEach(trigger => trigger.addEventListener('mouseleave', handleLeave));
+
 </script>
 
 </body>
