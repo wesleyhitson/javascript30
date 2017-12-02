@@ -80,6 +80,7 @@
     if (!e.isTrusted) return; // cheater, trying to fake clicks with js
     score++;
     this.classList.remove('up');
+    e.target.removeEventListener(e.type, arguments.callee);
     scoreBoard.textContent = score;
   }
 
